@@ -1,0 +1,11 @@
+[package]
+name = "sim-exchange"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+sim-core = { path = "../sim-core" }
+
+[lib]
+path = "src/lib.rs"
+

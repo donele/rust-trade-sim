@@ -1,0 +1,12 @@
+[package]
+name = "sim-strategy"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+sim-core = { path = "../sim-core" }
+sim-orders = { path = "../sim-orders" }
+
+[lib]
+path = "src/lib.rs"
+

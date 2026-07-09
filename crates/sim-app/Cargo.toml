@@ -1,0 +1,15 @@
+[package]
+name = "sim-app"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+sim-core = { path = "../sim-core" }
+sim-feed = { path = "../sim-feed" }
+sim-exchange = { path = "../sim-exchange" }
+sim-strategy = { path = "../sim-strategy" }
+
+[[bin]]
+name = "trade_sim"
+path = "src/main.rs"
+
