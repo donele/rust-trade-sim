@@ -46,6 +46,7 @@ impl StrategyHost {
 
     pub fn on_order_update(&mut self, update: core::OrderUpdate) {
         self.order_manager.on_update(update);
+        self.position_manager.on_order_update(&update);
     }
 
     pub fn order_updates_seen(&self) -> usize {

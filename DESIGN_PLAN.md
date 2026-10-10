@@ -112,6 +112,13 @@ Completed:
 - top-level `Message` enum with explicit message timestamps
 - initial tests for message timestamps and reference protocol message IDs
 - workspace validation with `cargo check --workspace` and `cargo test --workspace`
+- fixed-point-style `Price`/`Quantity` values for book ordering, matching the C++ book representation
+- `Symbol` and `SymbolRegistry` with ID and flat-symbol lookup
+- per-symbol `OrderBook` and `BookMap` primitives
+- absolute L2 incremental updates, top-of-book updates, snapshot resets, and explicit reset handling
+- basic `PositionManager` with average-price and realized-PnL accounting
+- basic `RiskManager` with order-size and projected-position limits
+- unit tests for symbol lookup, tick ordering, level insertion/removal, snapshot clearing, positions, and risk checks
 
 Still intentionally incomplete in this phase:
 
@@ -125,19 +132,19 @@ The current types are therefore a semantic Rust model, not yet a binary-compatib
 
 ## Next steps
 
-The next implementation phase is **Phase 2: book and state primitives**. Work should proceed in this
-order:
+Phase 2 is complete at the primitive level. The next implementation phase is **Phase 3: historical
+feed and sequencing**:
 
-1. Decide the canonical price and quantity representation, preferably fixed-point rather than raw `f64` for order-state and fill accounting.
-2. Add a `SymbolRegistry` that maps external symbols to `SymbolId` and stores symbol metadata.
-3. Implement price levels and a per-symbol order book.
-4. Implement `BookMap` and apply `Incremental`, `BookTicker`, snapshot, and reset messages deterministically.
-5. Add position and basic risk-state containers in `orders`.
-6. Add tests for level updates, crossed-book cleanup, snapshot transitions, symbol lookup, and reset behavior.
+1. Define a `MarketDataSource` trait and source cursor contract.
+2. Add historical adapters for the reference feed formats.
+3. Add a CSV `OrderRequest` source.
+4. Replace the placeholder `SimSequencer` vector drain with a merged timestamp/priority event heap.
+5. Define deterministic tie-breaking for market data, order requests, order updates, packet boundaries, and clock messages.
+6. Add replay-window filtering and start/end-time behavior.
+7. Add end-to-end tests proving stable ordering across multiple sources.
 
-Once these primitives are stable, begin Phase 3: feed sources and the merged `SimSequencer`. That phase
-should introduce a source trait, historical adapters, CSV `OrderRequest` input, and deterministic
-timestamp/priority ordering across market and order messages.
+After sequencing is stable, begin Phase 4: exchange simulation, including simulated acknowledgements,
+crossing/fill behavior, cancels, latency parameters, and delayed `OrderUpdate` emission.
 
 ## High-level implementation order
 

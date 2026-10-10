@@ -3,6 +3,9 @@
 pub type TimeNanos = i64;
 pub type TradeId = i64;
 
+pub mod book;
+pub mod symbols;
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct SymbolId(pub u32);
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]

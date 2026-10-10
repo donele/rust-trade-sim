@@ -40,5 +40,5 @@ fn main() {
 
     println!("trade_sim scaffold ready");
     println!("order_updates_seen={}", strategy.order_updates_seen());
-    println!("next_step=implement version 1 replay, books, and exchange semantics");
+    println!("next_step=implement historical feeds and deterministic sequencing");
 }
