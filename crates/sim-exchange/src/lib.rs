@@ -1,4 +1,4 @@
-use sim_core::{OrderId, OrderRequest, OrderUpdate};
+use core::{OrderId, OrderRequest, OrderUpdate};
 
 #[derive(Debug, Default)]
 pub struct ExchangeSimulator {

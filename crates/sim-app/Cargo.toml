@@ -4,10 +4,10 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-sim-core = { path = "../sim-core" }
-sim-feed = { path = "../sim-feed" }
+core = { path = "../core" }
+feed = { path = "../feed" }
 sim-exchange = { path = "../sim-exchange" }
-sim-strategy = { path = "../sim-strategy" }
+strategy = { path = "../strategy" }
 
 [[bin]]
 name = "trade_sim"

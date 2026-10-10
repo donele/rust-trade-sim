@@ -62,13 +62,13 @@ hard to maintain quickly.
 
 Suggested top-level crates:
 
-- `crates/sim-core`
+- `crates/core`
   - message model
   - time model
   - symbol model
   - book model
   - shared identifiers and enums
-- `crates/sim-feed`
+- `crates/feed`
   - historical sources
   - CSV order request source
   - event merge / replay support
@@ -76,12 +76,12 @@ Suggested top-level crates:
   - exchange simulator
   - simulated order lifecycle
   - simulated fills
-- `crates/sim-orders`
+- `crates/orders`
   - order manager
   - position manager
   - risk manager
   - order state caches
-- `crates/sim-strategy`
+- `crates/strategy`
   - strategy host
   - dispatcher
   - trading engine

@@ -1,0 +1,11 @@
+[package]
+name = "feed"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+core = { path = "../core" }
+
+[lib]
+path = "src/lib.rs"
+

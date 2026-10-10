@@ -1,4 +1,4 @@
-use sim_core::OrderUpdate;
+use core::OrderUpdate;
 
 #[derive(Debug, Default)]
 pub struct OrderManager {

@@ -1,5 +1,5 @@
-use sim_core::{OrderRequest, ReplayEvent, StrategyId};
-use sim_orders::{OrderManager, PositionManager, RiskManager};
+use core::{OrderRequest, ReplayEvent, StrategyId};
+use orders::{OrderManager, PositionManager, RiskManager};
 
 #[derive(Debug)]
 pub struct TradingEngine {
@@ -44,7 +44,7 @@ impl StrategyHost {
         self.trading_engine.evaluate(event)
     }
 
-    pub fn on_order_update(&mut self, update: sim_core::OrderUpdate) {
+    pub fn on_order_update(&mut self, update: core::OrderUpdate) {
         self.order_manager.on_update(update);
     }
 

@@ -1,4 +1,4 @@
-pub type SimNanos = i64;
+pub type TimeNanos = i64;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct SymbolId(pub u32);
@@ -20,7 +20,7 @@ pub enum Side {
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Trade {
-    pub ts_nanos: SimNanos,
+    pub ts_nanos: TimeNanos,
     pub symbol: SymbolId,
     pub price_ticks: i64,
     pub qty: i64,
@@ -29,7 +29,7 @@ pub struct Trade {
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct OrderRequest {
-    pub ts_nanos: SimNanos,
+    pub ts_nanos: TimeNanos,
     pub client_id: ClientId,
     pub strategy_id: StrategyId,
     pub symbol: SymbolId,
@@ -40,7 +40,7 @@ pub struct OrderRequest {
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct OrderUpdate {
-    pub ts_nanos: SimNanos,
+    pub ts_nanos: TimeNanos,
     pub order_id: OrderId,
     pub filled_qty: i64,
     pub leaves_qty: i64,
@@ -51,6 +51,6 @@ pub enum ReplayEvent {
     Trade(Trade),
     OrderRequest(OrderRequest),
     OrderUpdate(OrderUpdate),
-    EndTime { ts_nanos: SimNanos },
+    EndTime { ts_nanos: TimeNanos },
 }
 

@@ -1,10 +1,10 @@
 [workspace]
 members = [
-    "crates/sim-core",
-    "crates/sim-feed",
+    "crates/core",
+    "crates/feed",
     "crates/sim-exchange",
-    "crates/sim-orders",
-    "crates/sim-strategy",
+    "crates/orders",
+    "crates/strategy",
     "crates/sim-app",
 ]
 resolver = "2"

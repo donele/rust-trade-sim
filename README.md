@@ -38,15 +38,15 @@ Version 1 does not aim to cover:
 
 ## Repository layout
 
-- `crates/sim-core`
+- `crates/core`
   - shared identifiers, time aliases, and event types
-- `crates/sim-feed`
+- `crates/feed`
   - replay source and sequencing layer
 - `crates/sim-exchange`
   - exchange simulator and simulated order lifecycle
-- `crates/sim-orders`
+- `crates/orders`
   - order, position, and risk managers
-- `crates/sim-strategy`
+- `crates/strategy`
   - strategy host and trading engine layer
 - `crates/sim-app`
   - `trade_sim` binary
@@ -124,7 +124,7 @@ Still to implement for version 1:
 
 The intended implementation order is:
 
-1. expand `sim-core` into the stable message and identifier model
+1. expand `core` into the stable message and identifier model
 2. implement books and symbol state
 3. implement deterministic replay sequencing
 4. implement exchange simulation semantics

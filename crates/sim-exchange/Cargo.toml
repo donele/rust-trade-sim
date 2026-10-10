@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-sim-core = { path = "../sim-core" }
+core = { path = "../core" }
 
 [lib]
 path = "src/lib.rs"

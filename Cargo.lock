@@ -3,44 +3,44 @@
 version = 4
 
 [[package]]
-name = "sim-app"
+name = "core"
+version = "0.1.0"
+
+[[package]]
+name = "feed"
 version = "0.1.0"
 dependencies = [
- "sim-core",
- "sim-exchange",
- "sim-feed",
- "sim-strategy",
+ "core",
 ]
 
 [[package]]
-name = "sim-core"
+name = "orders"
 version = "0.1.0"
+dependencies = [
+ "core",
+]
+
+[[package]]
+name = "sim-app"
+version = "0.1.0"
+dependencies = [
+ "core",
+ "feed",
+ "sim-exchange",
+ "strategy",
+]
 
 [[package]]
 name = "sim-exchange"
 version = "0.1.0"
 dependencies = [
- "sim-core",
+ "core",
 ]
 
 [[package]]
-name = "sim-feed"
+name = "strategy"
 version = "0.1.0"
 dependencies = [
- "sim-core",
-]
-
-[[package]]
-name = "sim-orders"
-version = "0.1.0"
-dependencies = [
- "sim-core",
-]
-
-[[package]]
-name = "sim-strategy"
-version = "0.1.0"
-dependencies = [
- "sim-core",
- "sim-orders",
+ "core",
+ "orders",
 ]

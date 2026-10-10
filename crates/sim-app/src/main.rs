@@ -1,7 +1,7 @@
-use sim_core::{ClientId, OrderRequest, ReplayEvent, Side, StrategyId, SymbolId};
+use core::{ClientId, OrderRequest, ReplayEvent, Side, StrategyId, SymbolId};
 use sim_exchange::ExchangeSimulator;
-use sim_feed::SimSequencer;
-use sim_strategy::StrategyHost;
+use feed::SimSequencer;
+use strategy::StrategyHost;
 
 fn main() {
     let events = vec![ReplayEvent::OrderRequest(OrderRequest {

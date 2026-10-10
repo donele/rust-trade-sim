@@ -1,4 +1,4 @@
-use sim_core::ReplayEvent;
+use core::ReplayEvent;
 
 #[derive(Debug, Default)]
 pub struct SimSequencer {
