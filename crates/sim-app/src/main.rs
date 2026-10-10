@@ -1,17 +1,28 @@
-use core::{ClientId, OrderRequest, ReplayEvent, Side, StrategyId, SymbolId};
-use sim_exchange::ExchangeSimulator;
+use core::{
+    ClientId, Message, OrderAction, OrderId, OrderRequest, OrderType, ParentOrderId, Side,
+    StrategyId, SymbolId, TimeInForce,
+};
 use feed::SimSequencer;
+use sim_exchange::ExchangeSimulator;
 use strategy::StrategyHost;
 
 fn main() {
-    let events = vec![ReplayEvent::OrderRequest(OrderRequest {
+    let events = vec![Message::OrderRequest(OrderRequest {
         ts_nanos: 0,
-        client_id: ClientId(1),
-        strategy_id: StrategyId(2),
         symbol: SymbolId(1),
+        parent_order_id: ParentOrderId(0),
+        client_id: ClientId(1),
+        order_id: OrderId(0),
+        action: OrderAction::New,
         side: Side::Buy,
-        price_ticks: 100,
-        qty: 1,
+        price: 100.0,
+        qty: 1.0,
+        time_in_force: TimeInForce::Gtc,
+        order_type: OrderType::Limit,
+        strategy_id: StrategyId(2),
+        exchange_time: 0,
+        window: 0,
+        post_only: false,
     })];
 
     let sequencer = SimSequencer::new(events);
@@ -19,7 +30,7 @@ fn main() {
     let mut strategy = StrategyHost::new(StrategyId(2));
 
     for event in sequencer.drain() {
-        if let ReplayEvent::OrderRequest(request) = event {
+        if let Message::OrderRequest(request) = event {
             let update = simulator.submit(request);
             strategy.on_order_update(update);
         } else {
@@ -31,4 +42,3 @@ fn main() {
     println!("order_updates_seen={}", strategy.order_updates_seen());
     println!("next_step=implement version 1 replay, books, and exchange semantics");
 }
-

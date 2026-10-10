@@ -16,10 +16,27 @@ impl ExchangeSimulator {
 
         OrderUpdate {
             ts_nanos: request.ts_nanos,
+            symbol: request.symbol,
+            parent_order_id: request.parent_order_id,
+            client_id: request.client_id,
             order_id,
-            filled_qty: 0,
-            leaves_qty: request.qty,
+            side: request.side,
+            order_type: request.order_type,
+            time_in_force: request.time_in_force,
+            post_only: request.post_only,
+            order_price: request.price,
+            order_qty: request.qty,
+            filled_qty: 0.0,
+            cum_qty: 0.0,
+            open_qty: request.qty,
+            executed_price: 0.0,
+            average_fill_price: 0.0,
+            fees: 0.0,
+            trade_id: -1,
+            exchange_time: request.exchange_time,
+            strategy_id: request.strategy_id,
+            order_status: core::OrderStatus::New,
+            reject_reason: core::RejectReason::None,
         }
     }
 }
-

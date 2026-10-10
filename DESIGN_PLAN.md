@@ -96,6 +96,49 @@ If the repo starts smaller, begin with a single crate and module boundaries that
 layout. The important part is preserving separable ownership boundaries so crates can be split out
 without a rewrite.
 
+## Current status
+
+The workspace and shared message-model phase are now in place.
+
+Completed:
+
+- neutral shared crates: `core`, `feed`, `orders`, and `strategy`
+- simulator-specific crates: `sim-exchange` and `sim-app`
+- shared time alias: `TimeNanos`
+- strongly typed identifiers including `SymbolId`, `OrderId`, `ClientId`, `ParentOrderId`, and `StrategyId`
+- shared enums for sides, order actions, order types, time-in-force, statuses, rejection reasons, and execution strategy types
+- shared market-data messages: `Incremental`, `BookTicker`, `Trade`, `FundingRate`, and `Liquidation`
+- shared order and lifecycle messages: `OrderRequest`, `OrderUpdate`, `AlgoOrderRequest`, `ClockMessage`, `EndTimeMessage`, `PacketBegin`, `PacketEnd`, and `Reset`
+- top-level `Message` enum with explicit message timestamps
+- initial tests for message timestamps and reference protocol message IDs
+- workspace validation with `cargo check --workspace` and `cargo test --workspace`
+
+Still intentionally incomplete in this phase:
+
+- exact C++ packed/wire layouts and shared-memory serialization
+- external feed parsing and message deserialization
+- symbol registry and symbol metadata
+- price/quantity fixed-point representation
+- complete message families such as control, balance, position, and risk updates
+
+The current types are therefore a semantic Rust model, not yet a binary-compatible transport model.
+
+## Next steps
+
+The next implementation phase is **Phase 2: book and state primitives**. Work should proceed in this
+order:
+
+1. Decide the canonical price and quantity representation, preferably fixed-point rather than raw `f64` for order-state and fill accounting.
+2. Add a `SymbolRegistry` that maps external symbols to `SymbolId` and stores symbol metadata.
+3. Implement price levels and a per-symbol order book.
+4. Implement `BookMap` and apply `Incremental`, `BookTicker`, snapshot, and reset messages deterministically.
+5. Add position and basic risk-state containers in `orders`.
+6. Add tests for level updates, crossed-book cleanup, snapshot transitions, symbol lookup, and reset behavior.
+
+Once these primitives are stable, begin Phase 3: feed sources and the merged `SimSequencer`. That phase
+should introduce a source trait, historical adapters, CSV `OrderRequest` input, and deterministic
+timestamp/priority ordering across market and order messages.
+
 ## High-level implementation order
 
 The ordering is deliberate because the later layers depend heavily on the earlier ones.
@@ -110,12 +153,13 @@ Implement:
   - `Trade`
   - `FundingRate`
   - `Liquidation`
-  - `Clock`
+  - `ClockMessage`
   - `PacketBegin`
   - `PacketEnd`
   - `Reset`
+  - `OrderRequest`
   - `OrderUpdate`
-  - `ExecOrderRequest`
+  - `AlgoOrderRequest`
   - `EndTime`
 - enums and identifiers
 - time utilities
@@ -387,10 +431,11 @@ until the replay and order-state behavior is stable.
 
 ### Message representation
 
-Use a top-level replay event enum, for example:
+Use a top-level shared message enum, for example:
 
 - `Market(MarketEvent)`
-- `OrderRequest(ExecOrderRequest)`
+- `OrderRequest(OrderRequest)`
+- `AlgoOrderRequest(AlgoOrderRequest)`
 - `Simulator(SimEvent)`
 - `Control(ControlEvent)`
 
@@ -448,7 +493,7 @@ The desired Rust data flow for the first meaningful version is:
 3. market-data sources open
 4. order-request source opens
 5. `SimSequencer` merges all events
-6. `ExchangeSimulator` receives replay events
+6. `ExchangeSimulator` receives events
 7. `StrategyHost` receives market and order events
 8. dispatcher updates state managers
 9. trading engine evaluates signals and sends simulated orders

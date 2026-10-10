@@ -1,12 +1,12 @@
-use core::ReplayEvent;
+use core::Message;
 
 #[derive(Debug, Default)]
 pub struct SimSequencer {
-    events: Vec<ReplayEvent>,
+    events: Vec<Message>,
 }
 
 impl SimSequencer {
-    pub fn new(events: Vec<ReplayEvent>) -> Self {
+    pub fn new(events: Vec<Message>) -> Self {
         Self { events }
     }
 
@@ -18,8 +18,7 @@ impl SimSequencer {
         self.events.is_empty()
     }
 
-    pub fn drain(self) -> Vec<ReplayEvent> {
+    pub fn drain(self) -> Vec<Message> {
         self.events
     }
 }
-

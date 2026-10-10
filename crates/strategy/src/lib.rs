@@ -1,4 +1,4 @@
-use core::{OrderRequest, ReplayEvent, StrategyId};
+use core::{Message, OrderRequest, StrategyId};
 use orders::{OrderManager, PositionManager, RiskManager};
 
 #[derive(Debug)]
@@ -15,7 +15,7 @@ impl TradingEngine {
         self.strategy_id
     }
 
-    pub fn evaluate(&mut self, _event: &ReplayEvent) -> Option<OrderRequest> {
+    pub fn evaluate(&mut self, _message: &Message) -> Option<OrderRequest> {
         None
     }
 }
@@ -38,10 +38,10 @@ impl StrategyHost {
         }
     }
 
-    pub fn on_event(&mut self, event: &ReplayEvent) -> Option<OrderRequest> {
+    pub fn on_event(&mut self, message: &Message) -> Option<OrderRequest> {
         let _ = &self.position_manager;
         let _ = &self.risk_manager;
-        self.trading_engine.evaluate(event)
+        self.trading_engine.evaluate(message)
     }
 
     pub fn on_order_update(&mut self, update: core::OrderUpdate) {
@@ -52,4 +52,3 @@ impl StrategyHost {
         self.order_manager.updates_seen()
     }
 }
-
