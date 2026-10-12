@@ -114,13 +114,6 @@ impl OrderBook {
             .ok_or(BookError::InvalidPriceOrQuantity)?;
         let qty = Quantity::from_value(update.qty, self.qty_increment)
             .ok_or(BookError::InvalidPriceOrQuantity)?;
-        let level = BookLevel {
-            price,
-            qty,
-            num_orders: update.num_orders_at_level,
-            modified_time: update.ts_nanos,
-        };
-
         let levels = match update.side {
             Side::Buy => &mut self.bids,
             Side::Sell => &mut self.asks,
@@ -129,6 +122,12 @@ impl OrderBook {
         if qty.ticks() == 0 {
             levels.remove(&price);
         } else {
+            let level = BookLevel {
+                price,
+                qty,
+                num_orders: update.num_orders_at_level,
+                modified_time: update.ts_nanos,
+            };
             levels.insert(price, level);
         }
         self.last_update_time = Some(update.ts_nanos);
@@ -168,6 +167,13 @@ impl OrderBook {
             Side::Sell => &mut self.asks,
             Side::Unknown => return Err(BookError::UnknownSide),
         };
+
+        match side {
+            Side::Buy => levels.retain(|level_price, _| *level_price <= price),
+            Side::Sell => levels.retain(|level_price, _| *level_price >= price),
+            Side::Unknown => unreachable!(),
+        }
+
         if qty.ticks() == 0 {
             levels.remove(&price);
         } else {
@@ -322,6 +328,36 @@ mod tests {
         let delete = Incremental { qty: 0.0, ..update };
         book.apply_incremental(&delete).unwrap();
         assert!(book.best_bid().is_none());
+    }
+
+    #[test]
+    fn book_ticker_removes_stale_better_levels() {
+        let mut book = book();
+        for (price, side) in [(101.0, Side::Buy), (99.0, Side::Sell)] {
+            book.apply_incremental(&Incremental {
+                ts_nanos: 1,
+                symbol: SymbolId(1),
+                price,
+                qty: 1.0,
+                num_orders_at_level: 1,
+                side,
+            })
+            .unwrap();
+        }
+
+        book.apply_book_ticker(&BookTicker {
+            ts_nanos: 2,
+            symbol: SymbolId(1),
+            best_bid_price: 100.0,
+            best_bid_qty: 2.0,
+            best_ask_price: 100.5,
+            best_ask_qty: 3.0,
+            update_id: 1,
+        })
+        .unwrap();
+
+        assert_eq!(book.best_bid().unwrap().price.to_value(), 100.0);
+        assert_eq!(book.best_ask().unwrap().price.to_value(), 100.5);
     }
 
     #[test]

@@ -119,6 +119,11 @@ Completed:
 - basic `PositionManager` with average-price and realized-PnL accounting
 - basic `RiskManager` with order-size and projected-position limits
 - unit tests for symbol lookup, tick ordering, level insertion/removal, snapshot clearing, positions, and risk checks
+- `MessageSource` channel abstraction and in-memory message source
+- deterministic `SimSequencer` heap ordered by timestamp, channel priority, and channel insertion order
+- half-open replay time-window filtering
+- CSV algorithm-order source with symbol lookup, validation, sorting, and `AlgoOrderRequest` emission
+- tests for multi-channel merge ordering, tie-breaking, time windows, and CSV input
 
 Still intentionally incomplete in this phase:
 
@@ -127,23 +132,21 @@ Still intentionally incomplete in this phase:
 - symbol registry and symbol metadata
 - price/quantity fixed-point representation
 - complete message families such as control, balance, position, and risk updates
+- historical market-data file adapters and deserialization
 
 The current types are therefore a semantic Rust model, not yet a binary-compatible transport model.
 
 ## Next steps
 
-Phase 2 is complete at the primitive level. The next implementation phase is **Phase 3: historical
-feed and sequencing**:
+Phases 1 and 2 are complete at the primitive level, and the first Phase 3 sequencing slice is in
+place. The remaining Phase 3 work is:
 
-1. Define a `MarketDataSource` trait and source cursor contract.
-2. Add historical adapters for the reference feed formats.
-3. Add a CSV `OrderRequest` source.
-4. Replace the placeholder `SimSequencer` vector drain with a merged timestamp/priority event heap.
-5. Define deterministic tie-breaking for market data, order requests, order updates, packet boundaries, and clock messages.
-6. Add replay-window filtering and start/end-time behavior.
-7. Add end-to-end tests proving stable ordering across multiple sources.
+1. Add historical market-data adapters for the reference feed formats.
+2. Define source-specific parsing and deserialization errors.
+3. Add packet-boundary and snapshot metadata to feed messages where required.
+4. Add end-to-end tests proving stable ordering across historical market data and algorithm orders.
 
-After sequencing is stable, begin Phase 4: exchange simulation, including simulated acknowledgements,
+After the feed adapters are stable, begin Phase 4: exchange simulation, including simulated acknowledgements,
 crossing/fill behavior, cancels, latency parameters, and delayed `OrderUpdate` emission.
 
 ## High-level implementation order

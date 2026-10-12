@@ -1,24 +1,11 @@
-use core::Message;
+mod csv_order_source;
+mod ferris_csv_source;
+mod sequencer;
+mod source;
+mod vec_source;
 
-#[derive(Debug, Default)]
-pub struct SimSequencer {
-    events: Vec<Message>,
-}
-
-impl SimSequencer {
-    pub fn new(events: Vec<Message>) -> Self {
-        Self { events }
-    }
-
-    pub fn len(&self) -> usize {
-        self.events.len()
-    }
-
-    pub fn is_empty(&self) -> bool {
-        self.events.is_empty()
-    }
-
-    pub fn drain(self) -> Vec<Message> {
-        self.events
-    }
-}
+pub use csv_order_source::{CsvSourceError, OrderRequestCsvSource};
+pub use ferris_csv_source::{MarketDataCsvError, MarketDataCsvKind, MarketDataCsvSource};
+pub use sequencer::SimSequencer;
+pub use source::MessageSource;
+pub use vec_source::VecMessageSource;
